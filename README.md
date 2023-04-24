@@ -27,7 +27,7 @@ Class that stores multiple SensorData. SensorData is unique for each sensor type
 |[TYPE_GYROSCOPE](#type_gyroscope)|                         <b>Yes</b>|<b>Yes</b>|<I>n/a</I>|<I>n/a</I>|
 |[TYPE_LIGHT](#type_light)|                                 <b>Yes</b>|<b>Yes</b>|<b>Yes</b>|<b>Yes</b>|
 |[TYPE_LINEAR_ACCELERATION](#type_linear_acceleration)|     <b>Yes</b>|<b>Yes</b>|<I>n/a</I>|<I>n/a</I>|
-|[TYPE_MAGNETIC_FILED](#type_magnetic_field)|               <b>Yes</b>|<b>Yes</b>|<b>Yes</b>|<b>Yes</b>|
+|[TYPE_MAGNETIC_FIELD](#type_magnetic_field)|               <b>Yes</b>|<b>Yes</b>|<b>Yes</b>|<b>Yes</b>|
 |TYPE_ORIENTATION<sup>1</sup>|                              <b>Yes</b>|<b>Yes</b>|<b>Yes</b>|<b>Yes</b>|
 |[TYPE_PRESSURE](#type_pressure)|                           <b>Yes</b>|<b>Yes</b>|<I>n/a</I>|<I>n/a</I>|
 |[TYPE_PROXIMITY](#type_proximity)|                         <b>Yes</b>|<b>Yes</b>|<b>Yes</b>|<b>Yes</b>|
@@ -48,13 +48,32 @@ This coordinate is applied to: <br>
 
 ### Sensor Description and Units of Measure
 #### TYPE_ACCELEROMETER
+* SensorEvent.values[0:2]: Acceleration force along [x,y,z] axis. <br>
+* Units of Measure: m/s<sup>2</sup>
+#### TYPE_ACCELEROMETER_UNCALIBRATED
+* SensorEvent.values[0:2]: Acceleration force along [x,y,z] axis, without any bias compensation. <br>
+* SensorEvent.values[3:5]: Acceleration force along [x,y,z] axis, with estimated bias compensation. <br>
+* Units of Measure: m/s<sup>2</sup>
 #### TYPE_AMBIENT_TEMPERATURE
 #### TYPE_GRAVITY
+* SensorEvent.values[0:2]: Force of gravity along [x,y,z] axis. <br>
+* Units of Measure: m/s<sup>2</sup>
 #### TYPE_GYROSCOPE
+* SensorEvent.values[0:2]: Rate of rotation along [x,y,z] axis. <br>
+* Units of Measure: rad/s
+#### TYPE_GYROSCOPE_UNCALIBRATED
+* SensorEvent.values[0:2]: Rate of rotation along [x,y,z] axis, without drift compensation. <br>
+* SensorEvent.values[0:2]: Estimated drifted along [x,y,z] axis. <br>
+* Units of Measure: rad/s
 #### TYPE_LIGHT
 #### TYPE_LINEAR_ACCELERATION
-#### TYPE_MAGNETIC_FILED
+* SensorEvent.values[0:2]: Acceleration force along [x,y,z] axis, excluding gravity. <br>
+* Units of Measure: m/s<sup>2</sup>
+#### TYPE_MAGNETIC_FIELD
 #### TYPE_PRESSURE
 #### TYPE_PROXIMITY
 #### TYPE_RELATIVE_HUMIDITY
 #### TYPE_ROTATION_VECTOR
+* SensorEvent.values[0:2]: Rotation vector component along [x,y,z] axis. <br>
+* SensorEvent.values[3]: Scalar component of the rotation vector (optional). <br>
+* Units of Measure: Unitless

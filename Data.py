@@ -1,6 +1,9 @@
-import copy
-import warnings
+# Dependencies
+import copy # python standard library
+import warnings # python standard library
+import numpy as np # NumPy library. "pip install numpy" or "conda install numpy"
 
+# Class definitions
 class Data:
     '''
     Data class is a base class for SensorData and AndroidData class.
@@ -67,14 +70,14 @@ class SensorData(Data):
         '''
         getter method for the data attribute.
         '''
-        return copy.deepcopy(self.__data)
+        return copy.deepcopy(self.__data) # return deep copied instant
     @data.setter
     def data(self, value):
         '''
         setter method for the data attribute.
         '''
         # Insert validation process here.
-        self.__data = copy.deepcopy(value)
+        self.__data = copy.deepcopy(value) # store deep copied instant
     @data.deleter
     def data(self):
         '''
@@ -82,13 +85,14 @@ class SensorData(Data):
         '''
         # Warnings for deleting data attribute. Other methods and functions will expect data attribute to exist.
         warnings.warn('data attirubte must be reassigned before using this instance!')
+        # Insert logging function if tracking is needed.
         del self.__data
     @property
     def time(self):
         '''
         getter method for the time attribute.
         '''
-        return copy.deepcopy(self.__time)
+        return copy.deepcopy(self.__time) # return deep copied instant
     @time.setter
     def time(self, value):
         '''
@@ -102,7 +106,7 @@ class SensorData(Data):
         '''
         # Exception handling for Uniqueness (There exist duplicate time stamp).
         '''
-        if not(is_unique) then remove duplicate
+        if not(is_unique) then remove duplicate(time, data)
         '''
         # Validation for Monotonic increase.
         '''
@@ -113,7 +117,7 @@ class SensorData(Data):
         '''
         if not(is_monotonic_increase) then sort(time, data)
         '''
-        self.__time = copy.deepcopy(value)
+        self.__time = copy.deepcopy(value) # store deep copied instant
         # This method is not implemented yet!
         # Delete warning below when this method is fully implemented.
         warnings.warn('This method is on development!')
@@ -124,6 +128,7 @@ class SensorData(Data):
         '''
         # Warnings for deleting time attribute. Other methods and functions will expect time attribute to exist.
         warnings.warn('time attirubte must be reassigned before using this instance!')
+        # Insert logging function if tracking is needed.
         del self.__time
 
 class AndroidData(Data):

@@ -63,7 +63,7 @@ This coordinate is applied to: <br>
 * Units of Measure: rad/s
 #### TYPE_GYROSCOPE_UNCALIBRATED
 * SensorEvent.values[0:2]: Rate of rotation along [x,y,z] axis, without drift compensation. <br>
-* SensorEvent.values[0:2]: Estimated drifted along [x,y,z] axis. <br>
+* SensorEvent.values[3:5]: Estimated drifted along [x,y,z] axis. <br>
 * Units of Measure: rad/s
 #### TYPE_LIGHT
 #### TYPE_LINEAR_ACCELERATION

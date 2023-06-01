@@ -2,6 +2,7 @@
 import copy # python standard library
 import warnings # python standard library
 import numpy as np # NumPy library. "pip install numpy" or "conda install numpy"
+import pandas as pd # Pandas library. "pip install pandas" or "conda install pandas"
 
 # Class definitions
 class Data:
@@ -9,7 +10,35 @@ class Data:
     Data class is a base class for SensorData and AndroidData class.
     '''
     def __init__(self):
-        pass
+        self.__data = None # attribute 'data' initialize. The getter will return None if value is not assigned.
+    def __str__(self):
+        out = 'abc'
+        return(str(out)) # to be implemented
+    def __repr__(self):
+        out = 'abc'
+        return(out) # to be implemented
+    @property
+    def data(self):
+        '''
+        getter method for the data attribute.
+        '''
+        return copy.deepcopy(self.__data) # return deep copied instant
+    @data.setter
+    def data(self, value):
+        '''
+        setter method for the data attribute.
+        '''
+        # Insert validation process here.
+        self.__data = copy.deepcopy(value) # store deep copied instant
+    @data.deleter
+    def data(self):
+        '''
+        deleter method for the data attribute.
+        '''
+        # Warnings for deleting data attribute. Other methods and functions will expect data attribute to exist.
+        warnings.warn('data attirubte must be reassigned before using this instance!')
+        # Insert logging function if tracking is needed.
+        del self.__data
     def _to_csv(self):
         '''
         Export values to a csv file.
@@ -38,6 +67,7 @@ class Data:
         # This method is not implemented yet!
         # Delete warning below when this method is fully implemented.
         warnings.warn('This method is on development!')
+    
 
 class SensorData(Data):
     '''
@@ -45,10 +75,9 @@ class SensorData(Data):
     The stored values are never accessed directly. Only the deep copied instances are returned.
     '''
     def __init__(self, data=None, time=None):
-        self.__data = None # attribute 'data' initialize. The getter will return None if value is not assigned.
         self.__time = None # attribute 'time' initialize. The getter will return None if value is not assigned.
-        self.data = data # input parameter 'data' is deep copied and assigned to attribute 'data'.
         self.time = time # input parameter 'time' is deep copied and assigned to attribute 'time'.
+        self.data = data # input parameter 'data' is deep copied and assigned to attribute 'data'.
     def load(self, file):
         '''
         Load sensor timestamp and values from a file.
@@ -65,28 +94,6 @@ class SensorData(Data):
         # This method is not implemented yet!
         # Delete warning below when this method is fully implemented.
         warnings.warn('This method is on development!')
-    @property
-    def data(self):
-        '''
-        getter method for the data attribute.
-        '''
-        return copy.deepcopy(self.__data) # return deep copied instant
-    @data.setter
-    def data(self, value):
-        '''
-        setter method for the data attribute.
-        '''
-        # Insert validation process here.
-        self.__data = copy.deepcopy(value) # store deep copied instant
-    @data.deleter
-    def data(self):
-        '''
-        deleter method for the data attribute.
-        '''
-        # Warnings for deleting data attribute. Other methods and functions will expect data attribute to exist.
-        warnings.warn('data attirubte must be reassigned before using this instance!')
-        # Insert logging function if tracking is needed.
-        del self.__data
     @property
     def time(self):
         '''
@@ -154,3 +161,12 @@ class AndroidData(Data):
         out = AndroidData()
         out.data = self.data + other.data
         return out
+    
+def load_from_directory(path: str):
+    '''
+    A function which loads multiple sensor data under the directory of given path.
+    path (str) : A path to data directory.
+    '''
+    
+    data = AndroidData()
+    return data

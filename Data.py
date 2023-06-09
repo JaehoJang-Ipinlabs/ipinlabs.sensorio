@@ -12,11 +12,14 @@ class Data:
     def __init__(self):
         self.__data = None # attribute 'data' initialize. The getter will return None if value is not assigned.
     def __str__(self):
-        out = 'abc'
-        return(str(out)) # to be implemented
-    def __repr__(self):
-        out = 'abc'
+        out = str(self.data)
         return(out) # to be implemented
+    def __repr__(self):
+        out = str(self.data)
+        return(out) # to be implemented
+    def _repr_html_(self):
+        out = self.data._repr_html_()
+        return(f'{out}') # to be implemented
     @property
     def data(self):
         '''

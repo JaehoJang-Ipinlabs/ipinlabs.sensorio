@@ -1,5 +1,5 @@
 # ipinlabs.io
-Python class for android smartphone's sensor data
+Python class for loading IPINLABS android sensor app output.
 
 ## License
 Codes of this repository is made available to you under : <br>

@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 import os
 sensornamedict = {'acc':'ACCELEROMETER',
                   'game_rv':'GAME_ROTATION_VECTOR',
@@ -28,6 +29,12 @@ sensorcolumndict = {'acc':['Time','X','Y','Z'],
                     'rv':['Time','X','Y','Z','W','Var_Unknown_placeholder'],
                     'step':['Time','Step'],
                     'wifi':['Time','Mac','RSSI','Var_Unknown_placeholder','SSID']}
+
+def sensorparser(path):
+    # extract info from commented lines
+    
+    # extract data from regular lines
+    return None
 
 class FileFromCsv:
     def __init__(self,path,opt = None):
@@ -81,10 +88,17 @@ class TrialFromCsv:
             data = FileFromCsv(file,self.opt)
             self.sensors[data.sensortype] = data
         return None
-    def describe_time(self):
+    def describe_time(self,plot : bool = True):
         times = [x.dataframe.Time for x in self.sensors.values()]
+        sensor_types = [x.sensortype for x in self.sensors.values()]
         desc = [x.describe() for x in times]
-        return desc
+        if plot:
+            fig = plt.figure()
+            ax = fig.add_axes((1,1,1,1))
+            ax.boxplot(times)
+            ax.set_xticklabels(sensor_types, rotation = 90)
+            ax.grid()
+        return times, sensor_types, desc
     def describe_interval(self):
         intervals = [x.dataframe.Time.diff(axis=0) for x in self.sensors.values()]
         desc = [x.describe() for x in intervals]

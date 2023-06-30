@@ -1,6 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import scipy
 import os
+import copy
+import re
+import math
 sensornamedict = {'acc':'ACCELEROMETER',
                   'game_rv':'GAME_ROTATION_VECTOR',
                   'gps':'GPS',
@@ -30,76 +34,71 @@ sensorcolumndict = {'acc':['Time','X','Y','Z'],
                     'step':['Time','Step'],
                     'wifi':['Time','Mac','RSSI','Var_Unknown_placeholder','SSID']}
 
-def sensorparser(path):
-    # extract info from commented lines
-    
-    # extract data from regular lines
-    return None
+def parse_comment(path):
+    # extract commented lines
+    with open(path) as file:
+        comments = ''
+        for line in file:
+            if line.startswith('#'):
+                comments += line # saves comments as a single string
+            else:
+                break
+    # struct info from comments to dict
+    comments = re.split('[\t,\n]',comments) # split strings by sep and newline
+    comments = [x.split(': ') for x  in comments if len(x.split(': ')) == 2] # split by ': ' and save to list only when there are two elements. e.g. A: B
+    out_dict = {}
+    for elem in comments:
+        out_dict[elem[0]] = int(elem[1]) if elem[1].isnumeric() else elem[1] # cast the value as integer if value is numeric
+    return out_dict
 
-class FileFromCsv:
-    def __init__(self,path,opt = None):
-        self.__filename = path.split('/')[-1][:-4] # extract file name excluding the extension
-        self.__sensortype = sensornamedict[self.__filename]
-        self.__dataframe = pd.read_csv(path, names=sensorcolumndict[self.__filename]) if opt is None else pd.read_csv(path,names=sensorcolumndict[self.__filename],**opt)
-    @property
-    def filename(self):
-        return self.__filename
-    @property
-    def sensortype(self):
-        return self.__sensortype
-    @property
-    def dataframe(self):
-        return self.__dataframe.copy(deep=True)
-    @dataframe.setter
-    def dataframe(self,df):
-        self.__dataframe = df.copy(deep=True)
-    @dataframe.deleter
-    def dataframe(self):
-        del self.__dataframe
-    def __str__(self):
-        out = str(self.dataframe)
-        return(out) # to be implemented
-    def __repr__(self):
-        out = str(self.dataframe)
-        return(out) # to be implemented
-    def _repr_html_(self):
-        out = self.dataframe._repr_html_()
-        return(f'{out}') # to be implemented
-    
-class TrialFromCsv:
-    def __init__(self, path, opt = {'header' : None, 'comment' : '#', 'sep' : '\t'}):
-        self.__path = path
-        self.opt = opt
-        self.sensors = {} # List of FileFromCsv? or dict?
-        self.read_csvs()
-    @property
-    def path(self):
-        return self.__path    
-    def get_sensors(self):
-        return list(self.sensors.keys())
-    def get_csvlist(self,ext = 'txt'): # return list of file path ends with specific extension
-        filelist = []
-        for file in os.listdir(self.path):
-            if file.endswith('.'+ext):
-                filelist.append(os.path.join(self.path,file))
-        return filelist
-    def read_csvs(self,ext = 'txt'):
-        for file in self.get_csvlist(ext):
-            data = FileFromCsv(file,self.opt)
-            self.sensors[data.sensortype] = data
-        return None
-    def describe_time(self,plot : bool = True):
-        times = [x.dataframe.Time for x in self.sensors.values()]
-        sensor_types = [x.sensortype for x in self.sensors.values()]
-        desc = [x.describe() for x in times]
-        if plot:
-            fig = plt.figure()
-            ax = fig.add_axes((1,1,1,1))
-            ax.boxplot(times)
-            ax.set_xticklabels(sensor_types, rotation = 90)
-            ax.grid()
-        return times, sensor_types, desc
-    def describe_interval(self):
-        intervals = [x.dataframe.Time.diff(axis=0) for x in self.sensors.values()]
-        desc = [x.describe() for x in intervals]
-        return desc
+def align_time(time,currenttime,elapsedtime):
+    '''
+    Align timestamp to elapsed time (nanosec)
+    time: array-like object with timestamp as elements
+    currenttime: currentTimeMillis
+    elapsedtime: elapsedRealtimeNanos
+    '''
+    bias = currenttime * int(1e6) - elapsedtime
+    if len(time) != 0:
+        # digit = math.ceil(math.log10(time[0]))
+        # if digit == 15:
+        #     time_type = 'elapsedRealtimeNanos'
+        #     time_new = time
+        # elif digit == 13:
+        #     time_type = 'currentTimeMillis'
+        #     time_new = time*int(1e6) - bias
+        # else:
+        #     time_type = 'elapsedRealtimeNanos'
+        #     time_new = time*int(1e3)
+            
+        head_index = 3
+        currenttime_head = str(currenttime)[:head_index]
+        elapsedtime_head = str(elapsedtime)[:head_index]
+        time_head = str(time[0])[:head_index]
+        while currenttime_head == elapsedtime_head:
+            head_index = head_index + 1
+            currenttime_head = str(currenttime)[:head_index]
+            elapsedtime_head = str(elapsedtime)[:head_index]
+            time_head = str(time[0])[:head_index]      
+        digit = math.ceil(math.log10(time[0]))
+        currenttime_digit = math.ceil(math.log10(currenttime))
+        elapsedtime_digit = math.ceil(math.log10(elapsedtime))
+        if time_head == currenttime_head:
+            time_type = 'currentTimeMillis'
+            if digit == currenttime_digit:
+                time_new = time * int(1e6) - bias
+            else:
+                time_new = time * 10^(currenttime_digit - digit) * int(1e6) - bias
+        elif time_head == elapsedtime_head:
+            time_type = 'elapsedRealtimeNanos'
+            if digit == elapsedtime_digit:
+                time_new = time
+            else:
+                time_new = time * 10^(elapsedtime_digit - digit)
+        else:
+            time_new = []
+            time_type = ''
+    else:
+        time_new = []
+        time_type = ''
+    return time_new, time_type

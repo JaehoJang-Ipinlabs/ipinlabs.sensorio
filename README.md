@@ -41,10 +41,10 @@ Class that stores multiple SensorData. SensorData is unique for each sensor type
 <img src="https://developer.android.com/static/images/axis_device.png" title="Device_Axis"></img> <br>
 This coordinate is applied to: <br>
 * [Acceleration Sensor](#type_accelerometer) <br>
-* [Gravity Sensor](#type_gravity) <br>
-* [Gyroscope](#type_gyroscope) <br>
-* [Linear Acceleration Sensor](#type_linear_acceleration) <br>
-* [Geomagnetic Field Sensor](#type_magnetic_field) <br>
+* Gravity Sensor <br>
+* Gyroscope <br>
+* Linear Acceleration Sensor <br>
+* Geomagnetic Field Sensor <br>
 
 ### Sensor Description and Units of Measure
 #### TYPE_ACCELEROMETER

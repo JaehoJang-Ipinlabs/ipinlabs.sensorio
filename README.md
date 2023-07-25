@@ -1,4 +1,4 @@
-# ipinlabs.io
+# ipinlabs.sensorio
 Python class for loading IPINLABS android sensor app output.
 
 ## License

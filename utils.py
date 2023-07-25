@@ -38,7 +38,7 @@ sensorcolumndict = {'acc':['Time','X','Y','Z'],
                     'step':['Time','Step'],
                     'wifi':['Time','Mac','RSSI','Var_Unknown_placeholder','SSID']}
 
-def parse_comment(path):
+def parse_comment(path:str) -> dict:
     # extract commented lines
     with open(path) as file:
         comments = ''
@@ -108,7 +108,7 @@ def align_time(time,currenttime,elapsedtime):
         time_type = ''
     return time_new, time_type
     
-def gps_to_meter(df):
+def gps_to_meter(df:pd.DataFrame) -> np.ndarray:
     '''
     df is a pandas.DataFrame object of gps data.
     df should have 3 columns of Time, Lat, Lon. (time, latitude, longitude)

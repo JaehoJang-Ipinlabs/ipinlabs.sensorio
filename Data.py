@@ -6,7 +6,7 @@ import numpy as np # NumPy library. "pip install numpy"
 import pandas as pd # Pandas library. "pip install pandas"
 import scipy # scipy library. "pip install scipy"
 import matplotlib.pyplot as plt # matplotlib library. "pip install matplotlib"
-import ipinlabs.sensorio.utils as utils
+import utils as utils
 
 sensornamedict = utils.sensornamedict
 sensorcolumndict = utils.sensorcolumndict 

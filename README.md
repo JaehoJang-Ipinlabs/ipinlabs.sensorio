@@ -12,7 +12,7 @@ Codes of this repository is made available to you under : <br>
 <b>class</b> <I>SensorData</I> <br>
 Class that stores each individual sensor's data and timestamp
 
-<b>class</b> <I>AndroidData</I> <br>
+<b>class</b> <I>TrialData</I> <br>
 Class that stores multiple SensorData. SensorData is unique for each sensor types. 
 
 ## Functions

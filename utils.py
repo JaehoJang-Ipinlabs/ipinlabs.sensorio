@@ -115,9 +115,13 @@ def gps_to_meter(df:pd.DataFrame) -> np.ndarray:
     The index of the df should be pandas.RangeIndex,
     which is default when dataframe is created from pd.read_csv().
     '''
-    d_lat = df.Latitude - df.loc[0].Latitude
-    d_lon = df.Longitude - df.loc[0].Longitude
-    d_y = d_lat * (111132.92 - 559.82*np.cos(2*df.Latitude) + 1.175*np.cos(4*df.Latitude) - 0.0023*np.cos(6*df.Latitude))
-    d_x = d_lon * (111412.84*np.cos(df.Latitude) - 93.5*np.cos(df.Latitude) + 0.118*np.cos(5*df.Latitude))
+    Latitude = df.Latitude * np.pi / 180
+    Longitude = df.Longitude * np.pi / 180
+    d_lat = np.array(Latitude - Latitude[0])
+    d_lon = np.array(Longitude - Longitude[0])
+    d_y = np.multiply(np.array(d_lat)*180/np.pi,
+                      (111132.954 - 559.822*np.cos(2*Latitude[0]) + 1.175*np.cos(4*Latitude[0]) - 0.0023*np.cos(6*Latitude[0])))
+    d_x = np.multiply(np.array(d_lon)*180/np.pi,
+                      (111412.84*np.cos(Latitude) - 93.5*np.cos(Latitude) + 0.118*np.cos(5*Latitude)))
     out = np.stack([d_x, d_y],axis=1)
     return (out)

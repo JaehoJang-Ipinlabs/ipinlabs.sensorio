@@ -6,7 +6,6 @@ import os
 import copy
 import re
 import math
-import gmplot
 sensornamedict = {'acc':'ACCELEROMETER',
                   'game_rv':'GAME_ROTATION_VECTOR',
                   'gps':'GPS',
